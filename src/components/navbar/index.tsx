@@ -3,16 +3,33 @@ import styles from "./styles.module.scss";
 
 import Logo from "../../../public/favicon.svg";
 import Image from "next/image";
-import { useState, useEffect, useContext } from "react";
+import { useState, useEffect } from "react";
 import paths from "../../core/paths";
 import Link from "../common/icon-link";
-import { AccountContext } from "../../pages";
+import { Data } from "../../core/types";
 
 interface Props {
   open: boolean;
 }
 
 const Navbar: React.FC<Props> = ({ open }) => {
+  const fetchData = async () => {
+    const data = await fetch("./data.json", {
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+      },
+    }).then((res) => res.json().then((data: Data) => data));
+
+    return data;
+  };
+
+  const [data, setData] = useState<Data>();
+
+  useEffect(() => {
+    fetchData().then((data) => setData(data));
+  }, []);
+
   const [userPhotoUrl, setUserPhotoUrl] = useState("");
 
   const size = 70;
@@ -22,8 +39,6 @@ const Navbar: React.FC<Props> = ({ open }) => {
       setUserPhotoUrl(res.url)
     );
   }, []);
-
-  const { fullname, location, online, messages } = useContext(AccountContext);
 
   return (
     <nav
@@ -40,7 +55,7 @@ const Navbar: React.FC<Props> = ({ open }) => {
           {userPhotoUrl && (
             <div
               className={classNames(styles["photo-container"], {
-                [styles.online]: online,
+                [styles.online]: data?.account.online,
               })}
             >
               <Image
@@ -53,8 +68,8 @@ const Navbar: React.FC<Props> = ({ open }) => {
             </div>
           )}
           <div className={styles["profile-info"]}>
-            <span className={styles["fullname"]}>{fullname}</span>
-            <span className={styles["location"]}>{location}</span>
+            <span className={styles["fullname"]}>{data?.account.fullname}</span>
+            <span className={styles["location"]}>{data?.account.location}</span>
           </div>
         </div>
         <div className={styles.links}>
@@ -63,8 +78,10 @@ const Navbar: React.FC<Props> = ({ open }) => {
               <Link icon={path.icon} to={path.path}>
                 {path.name}
               </Link>
-              {path.path === "/messages" && !!messages && (
-                <span className={styles["messages-count"]}>{messages}</span>
+              {path.path === "/messages" && !!data?.account.messages && (
+                <span className={styles["messages-count"]}>
+                  {data.account.messages}
+                </span>
               )}
             </div>
           ))}

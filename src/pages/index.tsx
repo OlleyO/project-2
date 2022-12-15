@@ -1,12 +1,8 @@
 import type { NextPage } from "next";
 import Head from "next/head";
-import { createContext, useEffect, useState } from "react";
-import { Account, Data } from "../core/types";
+import { useEffect, useState } from "react";
+import { Data } from "../core/types";
 import HomeView from "../views/home";
-
-export const AccountContext = createContext<Account>(
-  null as unknown as Account
-);
 
 const Home: NextPage = () => {
   const fetchData = async () => {
@@ -35,22 +31,20 @@ const Home: NextPage = () => {
       </Head>
 
       {data && (
-        <AccountContext.Provider value={data.account}>
-          <HomeView
-            totalSales={data.totalSales}
-            newQuote={data.newQuote}
-            orders={data.orders}
-            products={data.products}
-            visitorsGraph={data.visitorsGraph}
-            weeklySalesAndExpense={data.weeklySalesAndExpense}
-            totalChargeAndProfit={data.totalChargeAndProfit}
-            customerRatings={data.customerRatings}
-            votes={data.votes}
-            websiteTraffic={data.websiteTraffic}
-            pieText={data.pieText}
-            profileInfo={data.profileInfo}
-          />
-        </AccountContext.Provider>
+        <HomeView
+          totalSales={data.totalSales}
+          newQuote={data.newQuote}
+          orders={data.orders}
+          products={data.products}
+          visitorsGraph={data.visitorsGraph}
+          weeklySalesAndExpense={data.weeklySalesAndExpense}
+          totalChargeAndProfit={data.totalChargeAndProfit}
+          customerRatings={data.customerRatings}
+          votes={data.votes}
+          websiteTraffic={data.websiteTraffic}
+          pieText={data.pieText}
+          profileInfo={data.profileInfo}
+        />
       )}
     </div>
   );

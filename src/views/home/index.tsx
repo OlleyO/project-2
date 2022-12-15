@@ -60,7 +60,7 @@ const colors = {
   registered: "var(--color-blue)",
 };
 
-const renderActiveShape = (props) => {
+const renderActiveShape = (props: any) => {
   const {
     cx,
     cy,
@@ -134,7 +134,7 @@ const HomeView: React.FC<Props> = ({
 
   const [activePiePart, setActivePiePart] = useState(0);
 
-  const handlePieEnter = (_, index: number) => setActivePiePart(index);
+  const handlePieEnter = (_: any, index: number) => setActivePiePart(index);
 
   useEffect(() => {
     if (smallGraph1.current) {
